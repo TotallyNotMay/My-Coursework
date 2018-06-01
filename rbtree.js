@@ -7,12 +7,8 @@ const BLACK = 1;
 
 //Default comparison function
 function defaultCompare(a, b) {
-  if (a < b) {
-    return -1;
-  }
-  if (a > b) {
-    return 1;
-  }
+  if (a < b) return -1;
+  else if (a > b) return 1;
   return 0;
 }
 
@@ -82,11 +78,7 @@ proto.insert = function(key, value) {
     const comparison = compare(key, element.key);
     elementStack.push(element);
     comparisonStack.push(comparison);
-    if (comparison <= 0) {
-      element = element.left;
-    } else {
-      element = element.right;
-    }
+    element = element[comparison <= 0 ? 'left' : 'right'];
   }
   elementStack.push(new RBNode(RED, key, value, null, null, 1));
   for (let i = elementStack.length - 2; i >= 0; --i) {
@@ -138,8 +130,10 @@ proto.insert = function(key, value) {
           elementStack[i - 1] = element;
           recount(grandParent);
           recount(parent);
-          if (i >= 3) {
-            const greatGrandParent = elementStack[i - 3];
+          const steps = 3;
+          const hasGreatGrandParent = (i >= steps);
+          if (hasGreatGrandParent) {
+            const greatGrandParent = elementStack[i - steps];
             if (greatGrandParent.left === grandParent) {
               greatGrandParent.left = parent;
             } else {
@@ -155,7 +149,7 @@ proto.insert = function(key, value) {
           parent.color = BLACK;
           grandParent.right = repaint(BLACK, uncle);
           grandParent.color = RED;
-          i -= 1;
+          i--;
         } else {
           //LRb
           parent.right = element.left;
@@ -169,8 +163,10 @@ proto.insert = function(key, value) {
           recount(grandParent);
           recount(parent);
           recount(element);
-          if (i >= 3) {
-            const greatGrandParent = elementStack[i - 3];
+          const steps = 3;
+          const hasGreatGrandParent = (i >= steps);
+          if (hasGreatGrandParent) {
+            const greatGrandParent = elementStack[i - steps];
             if (greatGrandParent.left === grandParent) {
               greatGrandParent.left = element;
             } else {
@@ -187,7 +183,7 @@ proto.insert = function(key, value) {
         parent.color = BLACK;
         grandParent.left = repaint(BLACK, uncle);
         grandParent.color = RED;
-        i -= 1;
+        i--;
       } else {
         //RRb
         grandParent.color = RED;
@@ -198,8 +194,10 @@ proto.insert = function(key, value) {
         elementStack[i - 1] = element;
         recount(grandParent);
         recount(parent);
-        if (i >= 3) {
-          const greatGrandParent = elementStack[i - 3];
+        const steps = 3;
+        const hasGreatGrandParent = (i >= steps);
+        if (hasGreatGrandParent) {
+          const greatGrandParent = elementStack[i - steps];
           if (greatGrandParent.right === grandParent) {
             greatGrandParent.right = parent;
           } else {
