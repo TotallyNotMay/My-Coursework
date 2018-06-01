@@ -26,15 +26,31 @@ function RBNode(color, key, value, left, right, count) {
 }
 
 function cloneNode(node) {
-  return new RBNode(node.color, node.key, node.value, node.left, node.right, node.count);
+  return new RBNode(
+    node.color,
+    node.key,
+    node.value,
+    node.left,
+    node.right,
+    node.count
+  );
 }
 
 function repaint(color, node) {
-  return new RBNode(color, node.key, node.value, node.left, node.right, node.count);
+  return new RBNode(
+    color,
+    node.key,
+    node.value,
+    node.left,
+    node.right,
+    node.count
+  );
 }
 
 function recount(node) {
-  node.count = 1 + (node.left ? node.left.count : 0) + (node.right ? node.right.count : 0);
+  const leftCount = (node.left ? node.left.count : 0);
+  const rightCount = (node.right ? node.right.count : 0);
+  node.count = 1 + leftCount + rightCount;
 }
 
 function RedBlackTree(compare, root) {
@@ -76,9 +92,23 @@ proto.insert = function(key, value) {
   for (let i = elementStack.length - 2; i >= 0; --i) {
     const element = elementStack[i];
     if (comparisonStack[i] <= 0) {
-      elementStack[i] = new RBNode(element.color, element.key, element.value, elementStack[i + 1], element.right, element.count + 1);
+      elementStack[i] = new RBNode(
+        element.color,
+        element.key,
+        element.value,
+        elementStack[i + 1],
+        element.right,
+        element.count + 1
+      );
     } else {
-      elementStack[i] = new RBNode(element.color, element.key, element.value, element.left, elementStack[i + 1], element.count + 1);
+      elementStack[i] = new RBNode(
+        element.color,
+        element.key,
+        element.value,
+        element.left,
+        elementStack[i + 1],
+        element.count + 1
+      );
     }
   }
   //Rebalance the tree
@@ -447,13 +477,34 @@ iproto.remove = function() {
   //Copy path to node
   const newStack = new Array(stack.length);
   let element = stack[stack.length - 1];
-  newStack[newStack.length - 1] = new RBNode(element.color, element.key, element.value, element.left, element.right, element.count);
+  newStack[newStack.length - 1] = new RBNode(
+    element.color,
+    element.key,
+    element.value,
+    element.left,
+    element.right,
+    element.count
+  );
   for (let i = stack.length - 2; i >= 0; --i) {
     const element = stack[i];
     if (element.left === stack[i + 1]) {
-      newStack[i] = new RBNode(element.color, element.key, element.value, newStack[i + 1], element.right, element.count);
+      newStack[i] = new RBNode(
+        element.color,
+        element.key,
+        element.value,
+        newStack[i + 1],
+        element.right,
+        element.count
+      );
     } else {
-      newStack[i] = new RBNode(element.color, element.key, element.value, element.left, newStack[i + 1], element.count);
+      newStack[i] = new RBNode(
+        element.color,
+        element.key,
+        element.value,
+        element.left,
+        newStack[i + 1],
+        element.count
+      );
     }
   }
   element = newStack[newStack.length - 1];
@@ -467,14 +518,28 @@ iproto.remove = function() {
       element = element.right;
     }
     const i = newStack[split - 1];
-    newStack.push(new RBNode(element.color, i.key, i.value, element.left, element.right, element.count));
+    newStack.push(new RBNode(
+      element.color,
+      i.key,
+      i.value,
+      element.left,
+      element.right,
+      element.count
+    ));
     newStack[split - 1].key = element.key;
     newStack[split - 1].value = element.value;
 
     //Fix up stack
     for (let i = newStack.length - 2; i >= split; --i) {
       element = newStack[i];
-      newStack[i] = new RBNode(element.color, element.key, element.value, element.left, newStack[i + 1], element.count);
+      newStack[i] = new RBNode(
+        element.color,
+        element.key,
+        element.value,
+        element.left,
+        newStack[i + 1],
+        element.count
+      );
     }
     newStack[split - 1].left = newStack[split];
   }
@@ -543,7 +608,14 @@ function visitEach(visit, node) {
       return visitor;
     }
   }
-  const visitor = visit(node.color, node.key, node.value, node.left, node.right, node.count);
+  const visitor = visit(
+    node.color,
+    node.key,
+    node.value,
+    node.left,
+    node.right,
+    node.count
+  );
   if (visitor) {
     return visitor;
   }
